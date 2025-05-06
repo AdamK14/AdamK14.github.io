@@ -2,6 +2,6 @@ body {
     margin: 0;
     padding: 0;
     height: 100vh;
-    background: url('background.png') no-repeat center center fixed;
+    background: url('images\background image.png') no-repeat center center fixed;
     background-size: cover;
 }
