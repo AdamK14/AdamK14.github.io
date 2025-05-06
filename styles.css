@@ -1,21 +1,30 @@
 body {
-    background-color: #121212;
-    color: #e0e0e0;
     font-family: 'Courier New', monospace;
+    color: #e0e0e0;
+    margin: 0;
+    padding: 20px;
+    background-image: url('images\background image.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    height: 100vh;
+    line-height: 1.6;
+    backdrop-filter: brightness(0.9);
 }
 
-.hero-img {
-    width: 100%;
-    max-width: 300px;
-    display: block;
-    margin: 0 auto 20px;
-    image-rendering: pixelated;
-}
-
-a {
-    color: #ffaa00;
+header, section {
+    background-color: rgba(18, 18, 18, 0.7);
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px #000;
 }
 
 h1, h2 {
+    color: #ffaa00;
+}
+
+a {
     color: #ff6600;
+    text-decoration: none;
 }
