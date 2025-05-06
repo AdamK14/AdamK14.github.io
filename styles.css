@@ -1,30 +1,7 @@
 body {
-    font-family: 'Courier New', monospace;
-    color: #e0e0e0;
     margin: 0;
-    padding: 20px;
-    background-image: url('images\background image.png');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
+    padding: 0;
     height: 100vh;
-    line-height: 1.6;
-    backdrop-filter: brightness(0.9);
-}
-
-header, section {
-    background-color: rgba(18, 18, 18, 0.7);
-    padding: 20px;
-    margin-bottom: 20px;
-    border-radius: 8px;
-    box-shadow: 0 0 10px #000;
-}
-
-h1, h2 {
-    color: #ffaa00;
-}
-
-a {
-    color: #ff6600;
-    text-decoration: none;
+    background: url('background.png') no-repeat center center fixed;
+    background-size: cover;
 }
