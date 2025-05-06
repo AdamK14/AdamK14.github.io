@@ -1,9 +1,0 @@
-title: Adam Khalil
-description: My personal site using the Jasper theme
-baseurl: "" # Only needed if your site is in a subdirectory
-url: "https://AdamK14.github.io"
-
-remote_theme: sharu725/jasper
-plugins:
-  - jekyll-feed
-  - jekyll-seo-tag
