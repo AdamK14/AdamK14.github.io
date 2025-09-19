@@ -118,8 +118,8 @@
             seedWalkers();
 
             function fadeCanvas() {
-                // blend down previous trails to create fading effect
-                ctx.fillStyle = 'rgba(12, 15, 20, 0.06)';
+                // More aggressive fade to prevent trail buildup
+                ctx.fillStyle = 'rgba(12, 15, 20, 0.12)';
                 ctx.fillRect(0, 0, canvas.width / devicePixelRatioScaled, canvas.height / devicePixelRatioScaled);
             }
 
