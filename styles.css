@@ -33,7 +33,8 @@ body {
 .bg-canvas {
     position: fixed;
     inset: 0;
-    z-index: 0;
+    z-index: 1;
+    pointer-events: none;
 }
 
 .overlay {
@@ -52,7 +53,7 @@ body {
         linear-gradient(to bottom, rgba(12, 15, 20, 0.92), rgba(12, 15, 20, 0.96));
     background-blend-mode: soft-light, soft-light, screen, screen, normal;
     pointer-events: none;
-    z-index: 1;
+    z-index: 0;
 }
 
 .container {
