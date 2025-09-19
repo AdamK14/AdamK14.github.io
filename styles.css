@@ -23,8 +23,7 @@ body {
     padding: 0;
     min-height: 100vh;
     color: var(--text);
-    background: url('images/background-image.png') no-repeat center center fixed, var(--bg);
-    background-size: cover;
+    background: var(--bg);
     backdrop-filter: none;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -34,9 +33,18 @@ body {
 .overlay {
     position: fixed;
     inset: 0;
-    background: radial-gradient(1200px 600px at 10% -10%, rgba(59, 209, 255, 0.08), transparent 60%),
-                radial-gradient(1200px 600px at 110% 10%, rgba(0, 255, 163, 0.06), transparent 60%),
-                linear-gradient(to bottom, rgba(12, 15, 20, 0.8), rgba(12, 15, 20, 0.9));
+    background-image:
+        /* Subtle vertical grid */
+        repeating-linear-gradient(90deg, rgba(255,255,255,0.045) 0 1px, transparent 1px 40px),
+        /* Subtle horizontal grid */
+        repeating-linear-gradient(0deg, rgba(255,255,255,0.035) 0 1px, transparent 1px 40px),
+        /* Accent glow left */
+        radial-gradient(1000px 480px at 12% -6%, rgba(59, 209, 255, 0.10), transparent 60%),
+        /* Accent glow right */
+        radial-gradient(1000px 480px at 112% 2%, rgba(0, 255, 163, 0.08), transparent 60%),
+        /* Depth vignette */
+        linear-gradient(to bottom, rgba(12, 15, 20, 0.92), rgba(12, 15, 20, 0.96));
+    background-blend-mode: soft-light, soft-light, screen, screen, normal;
     pointer-events: none;
 }
 
