@@ -91,9 +91,9 @@
             const colorB = styles.getPropertyValue('--accent-2').trim() || '#00ffa3';
 
             const walkers = [];
-            const MAX_WALKERS = prefersReduce ? 0 : 36;
-            const STEP = 0.8; // logical pixels per frame
-            const TURN = 0.25; // randomness of heading change
+            const MAX_WALKERS = prefersReduce ? 0 : 60;
+            const STEP = 1.0; // logical pixels per frame
+            const TURN = 0.22; // randomness of heading change
 
             function rand(min, max) { return Math.random() * (max - min) + min; }
             function lerp(a, b, t) { return a + (b - a) * t; }
@@ -138,7 +138,7 @@
             let rafId = null;
             function stepFrame() {
                 fadeCanvas();
-                ctx.lineWidth = 1.1;
+                ctx.lineWidth = 1.2;
                 ctx.lineCap = 'round';
                 for (let i = 0; i < walkers.length; i++) {
                     const w = walkers[i];
@@ -147,7 +147,7 @@
                     ctx.beginPath();
                     ctx.moveTo(w.x, w.y);
                     ctx.lineTo(nx, ny);
-                    const alpha = 0.22;
+                    const alpha = 0.28;
                     ctx.strokeStyle = mixColors(colorA, colorB, w.hueMix, alpha);
                     ctx.stroke();
                     w.x = nx; w.y = ny;

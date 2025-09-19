@@ -71,6 +71,11 @@ body {
     backdrop-filter: saturate(140%) blur(6px);
 }
 
+.site-header, main {
+    position: relative;
+    z-index: 2;
+}
+
 .site-header .container {
     display: flex;
     align-items: center;
