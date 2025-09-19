@@ -92,7 +92,7 @@
             const colorA = styles.getPropertyValue('--accent').trim() || '#3bd1ff';
             const colorB = styles.getPropertyValue('--accent-2').trim() || '#00ffa3';
 
-            const walkers = [];
+            let walkers = [];
             let MAX_WALKERS = 60;
             const STEP = 1.0; // logical pixels per frame
             const TURN = 0.22; // randomness of heading change
@@ -113,7 +113,11 @@
                 return w;
             }
 
-            for (let i = 0; i < MAX_WALKERS; i++) walkers.push(createWalker());
+            function seedWalkers() {
+                walkers = [];
+                for (let i = 0; i < MAX_WALKERS; i++) walkers.push(createWalker());
+            }
+            seedWalkers();
 
             function fadeCanvas() {
                 ctx.fillStyle = 'rgba(12, 15, 20, 0.06)';
@@ -183,17 +187,22 @@
                 }
             }
 
-            function startAnimation() {
-                if (rafId) return;
-                ctx.fillStyle = 'rgba(12, 15, 20, 1)';
-                ctx.fillRect(0, 0, canvas.width / devicePixelRatioScaled, canvas.height / devicePixelRatioScaled);
-                rafId = requestAnimationFrame(stepFrame);
+            function startAnimation(forceReinit) {
+                if (forceReinit || walkers.length === 0) seedWalkers();
+                canvas.style.display = 'block';
+                if (!rafId) {
+                    // prime with a subtle fade layer for trails
+                    ctx.fillStyle = 'rgba(12, 15, 20, 0.6)';
+                    ctx.fillRect(0, 0, canvas.width / devicePixelRatioScaled, canvas.height / devicePixelRatioScaled);
+                    rafId = requestAnimationFrame(stepFrame);
+                }
             }
 
             function stopAnimation() {
                 if (rafId) cancelAnimationFrame(rafId);
                 rafId = null;
-                drawStaticGrid();
+                // Hide canvas so CSS overlay grid shows through
+                canvas.style.display = 'none';
             }
 
             // Motion preference override: 'on' | 'off' | null
@@ -207,7 +216,7 @@
                 if (override === 'on') { toggle.textContent = 'Motion: On'; toggle.setAttribute('aria-pressed', 'true'); }
                 else if (override === 'off') { toggle.textContent = 'Motion: Off'; toggle.setAttribute('aria-pressed', 'false'); }
                 else { toggle.textContent = 'Motion: Auto'; toggle.setAttribute('aria-pressed', 'false'); }
-                if (shouldAnimate) startAnimation(); else stopAnimation();
+                if (shouldAnimate) startAnimation(true); else stopAnimation();
             }
 
             applyMotionPreference();
@@ -227,7 +236,7 @@
                     if (rafId) cancelAnimationFrame(rafId);
                     rafId = null;
                 } else if (shouldAnimate && !rafId) {
-                    rafId = requestAnimationFrame(stepFrame);
+                    startAnimation(false);
                 }
             });
 
