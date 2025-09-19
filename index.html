@@ -2,9 +2,68 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Background Only</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Adam Khalil</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://unpkg.com/aos@2.3.4/dist/aos.css">
 </head>
 <body>
+    <div class="overlay"></div>
+
+    <header class="site-header" data-aos="fade-down" data-aos-duration="800">
+        <div class="container">
+            <div class="brand">Adam Khalil</div>
+            <nav class="socials">
+                <a href="https://github.com/AdamK14" target="_blank" rel="noopener noreferrer" aria-label="GitHub">GitHub</a>
+                <a href="https://www.linkedin.com/in/adam-khalil-gt/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">LinkedIn</a>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero" data-aos="fade-up" data-aos-duration="900">
+            <div class="container hero-inner">
+                <img class="headshot" src="images/gh-profile-pic.png" alt="Adam Khalil headshot">
+                <div class="hero-text">
+                    <h1>Adam Khalil</h1>
+                    <p class="tagline">Senior CS @ Georgia Tech · Trading · Algorithms · HPC · ML · Statistics</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="about card" data-aos="fade-up" data-aos-duration="900" data-aos-delay="100">
+            <div class="container">
+                <h2>About</h2>
+                <p>
+                    I am a senior at Georgia Tech studying Computer Science, fascinated by the intersection of trading,
+                    algorithms, high performance computing, machine learning, and statistics. I enjoy building fast,
+                    reliable systems and thinking probabilistically about markets and data. I’m particularly interested
+                    in low-latency infrastructure, quantitative research workflows, and applying rigorous statistical
+                    methods to real-world decision making.
+                </p>
+            </div>
+        </section>
+
+        <section class="books card" data-aos="fade-up" data-aos-duration="900" data-aos-delay="150">
+            <div class="container">
+                <h2>Recent Reads</h2>
+                <ul class="book-list">
+                    <li><a href="https://www.amazon.com/dp/0691163363" target="_blank" rel="noopener noreferrer">Probability Theory: The Logic of Science — E. T. Jaynes</a></li>
+                    <li><a href="https://www.amazon.com/dp/0691166273" target="_blank" rel="noopener noreferrer">Dynamic Asset Pricing Theory — Darrell Duffie</a></li>
+                    <li><a href="https://www.amazon.com/dp/0387310738" target="_blank" rel="noopener noreferrer">Monte Carlo Methods in Financial Engineering — Paul Glasserman</a></li>
+                    <li><a href="https://www.amazon.com/dp/0262035618" target="_blank" rel="noopener noreferrer">Reinforcement Learning: An Introduction — Sutton & Barto</a></li>
+                    <li><a href="https://www.amazon.com/dp/1316647959" target="_blank" rel="noopener noreferrer">High Performance Markov Chain Monte Carlo — Vats, Flegal, Jones</a></li>
+                </ul>
+            </div>
+        </section>
+    </main>
+
+    <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+    <script>
+        AOS.init({
+            once: true,
+            offset: 80
+        });
+    </script>
 </body>
 </html>
