@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="https://unpkg.com/aos@2.3.4/dist/aos.css">
 </head>
 <body>
+    <canvas id="bg-canvas" class="bg-canvas" aria-hidden="true"></canvas>
     <div class="overlay"></div>
 
     <header class="site-header" data-aos="fade-down" data-aos-duration="800">
@@ -64,6 +65,134 @@
             once: true,
             offset: 80
         });
+    </script>
+    <script>
+        (function() {
+            const prefersReduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            const canvas = document.getElementById('bg-canvas');
+            const ctx = canvas.getContext('2d');
+
+            let devicePixelRatioScaled = 1;
+            function resizeCanvas() {
+                const dpr = Math.max(window.devicePixelRatio || 1, 1);
+                devicePixelRatioScaled = dpr;
+                const { innerWidth: w, innerHeight: h } = window;
+                canvas.width = Math.floor(w * dpr);
+                canvas.height = Math.floor(h * dpr);
+                canvas.style.width = w + 'px';
+                canvas.style.height = h + 'px';
+                ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+            }
+            resizeCanvas();
+            window.addEventListener('resize', resizeCanvas);
+
+            const styles = getComputedStyle(document.documentElement);
+            const colorA = styles.getPropertyValue('--accent').trim() || '#3bd1ff';
+            const colorB = styles.getPropertyValue('--accent-2').trim() || '#00ffa3';
+
+            const walkers = [];
+            const MAX_WALKERS = prefersReduce ? 0 : 36;
+            const STEP = 0.8; // logical pixels per frame
+            const TURN = 0.25; // randomness of heading change
+
+            function rand(min, max) { return Math.random() * (max - min) + min; }
+            function lerp(a, b, t) { return a + (b - a) * t; }
+
+            function createWalker() {
+                const w = {
+                    x: rand(0, window.innerWidth),
+                    y: rand(0, window.innerHeight),
+                    angle: rand(0, Math.PI * 2),
+                    speed: STEP * rand(0.6, 1.6),
+                    hueMix: Math.random(),
+                    life: 0,
+                    maxLife: rand(600, 1600)
+                };
+                return w;
+            }
+
+            for (let i = 0; i < MAX_WALKERS; i++) walkers.push(createWalker());
+
+            function fadeCanvas() {
+                ctx.fillStyle = 'rgba(12, 15, 20, 0.06)';
+                ctx.fillRect(0, 0, canvas.width / devicePixelRatioScaled, canvas.height / devicePixelRatioScaled);
+            }
+
+            function mixColors(c1, c2, t, alpha) {
+                // expects hex #RRGGBB
+                function hexToRgb(hex) {
+                    const v = hex.replace('#','');
+                    const r = parseInt(v.slice(0,2), 16);
+                    const g = parseInt(v.slice(2,4), 16);
+                    const b = parseInt(v.slice(4,6), 16);
+                    return { r, g, b };
+                }
+                const a = hexToRgb(c1);
+                const b = hexToRgb(c2);
+                const r = Math.round(lerp(a.r, b.r, t));
+                const g = Math.round(lerp(a.g, b.g, t));
+                const bl = Math.round(lerp(a.b, b.b, t));
+                return `rgba(${r}, ${g}, ${bl}, ${alpha})`;
+            }
+
+            let rafId = null;
+            function stepFrame() {
+                fadeCanvas();
+                ctx.lineWidth = 1.1;
+                ctx.lineCap = 'round';
+                for (let i = 0; i < walkers.length; i++) {
+                    const w = walkers[i];
+                    const nx = w.x + Math.cos(w.angle) * w.speed;
+                    const ny = w.y + Math.sin(w.angle) * w.speed;
+                    ctx.beginPath();
+                    ctx.moveTo(w.x, w.y);
+                    ctx.lineTo(nx, ny);
+                    const alpha = 0.22;
+                    ctx.strokeStyle = mixColors(colorA, colorB, w.hueMix, alpha);
+                    ctx.stroke();
+                    w.x = nx; w.y = ny;
+                    w.angle += rand(-TURN, TURN);
+                    w.life++;
+
+                    // wrap around edges
+                    if (w.x < -10) w.x = window.innerWidth + 10;
+                    if (w.x > window.innerWidth + 10) w.x = -10;
+                    if (w.y < -10) w.y = window.innerHeight + 10;
+                    if (w.y > window.innerHeight + 10) w.y = -10;
+
+                    if (w.life > w.maxLife) {
+                        walkers[i] = createWalker();
+                    }
+                }
+                rafId = requestAnimationFrame(stepFrame);
+            }
+
+            if (!prefersReduce) {
+                // prime with a subtle fade layer
+                ctx.fillStyle = 'rgba(12, 15, 20, 1)';
+                ctx.fillRect(0, 0, canvas.width / devicePixelRatioScaled, canvas.height / devicePixelRatioScaled);
+                stepFrame();
+            } else {
+                // Static subtle cross-lines for reduced motion
+                ctx.strokeStyle = 'rgba(255,255,255,0.04)';
+                ctx.lineWidth = 1;
+                for (let x = 0; x < window.innerWidth; x += 40) {
+                    ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, window.innerHeight); ctx.stroke();
+                }
+                for (let y = 0; y < window.innerHeight; y += 40) {
+                    ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(window.innerWidth, y); ctx.stroke();
+                }
+            }
+
+            document.addEventListener('visibilitychange', function() {
+                if (document.hidden) {
+                    if (rafId) cancelAnimationFrame(rafId);
+                    rafId = null;
+                } else if (!prefersReduce && !rafId) {
+                    rafId = requestAnimationFrame(stepFrame);
+                }
+            });
+        })();
     </script>
 </body>
 </html>
