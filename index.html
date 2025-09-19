@@ -17,7 +17,6 @@
             <nav class="socials">
                 <a href="https://github.com/AdamK14" target="_blank" rel="noopener noreferrer" aria-label="GitHub">GitHub</a>
                 <a href="https://www.linkedin.com/in/adam-khalil-gt/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">LinkedIn</a>
-                <button id="motion-toggle" class="motion-toggle" type="button" aria-pressed="false" title="Toggle background motion">Motion: Auto</button>
             </nav>
         </div>
     </header>
@@ -69,8 +68,6 @@
     </script>
     <script>
         (function() {
-            const mq = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)');
-            const prefersReduce = mq ? mq.matches : false;
             const canvas = document.getElementById('bg-canvas');
             const ctx = canvas.getContext('2d');
 
@@ -172,77 +169,27 @@
                 }
                 rafId = requestAnimationFrame(stepFrame);
             }
-
-            function drawStaticGrid() {
-                ctx.clearRect(0, 0, canvas.width / devicePixelRatioScaled, canvas.height / devicePixelRatioScaled);
-                ctx.fillStyle = 'rgba(12, 15, 20, 1)';
-                ctx.fillRect(0, 0, canvas.width / devicePixelRatioScaled, canvas.height / devicePixelRatioScaled);
-                ctx.strokeStyle = 'rgba(255,255,255,0.05)';
-                ctx.lineWidth = 1;
-                for (let x = 0; x < window.innerWidth; x += 40) {
-                    ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, window.innerHeight); ctx.stroke();
-                }
-                for (let y = 0; y < window.innerHeight; y += 40) {
-                    ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(window.innerWidth, y); ctx.stroke();
-                }
-            }
-
             function startAnimation(forceReinit) {
                 if (forceReinit || walkers.length === 0) seedWalkers();
                 canvas.style.display = 'block';
                 if (!rafId) {
-                    // prime with a subtle fade layer for trails
                     ctx.fillStyle = 'rgba(12, 15, 20, 0.6)';
                     ctx.fillRect(0, 0, canvas.width / devicePixelRatioScaled, canvas.height / devicePixelRatioScaled);
                     rafId = requestAnimationFrame(stepFrame);
                 }
             }
 
-            function stopAnimation() {
-                if (rafId) cancelAnimationFrame(rafId);
-                rafId = null;
-                // Hide canvas so CSS overlay grid shows through
-                canvas.style.display = 'none';
-            }
-
-            // Motion preference override: 'on' | 'off' | null
-            function getOverride() { return localStorage.getItem('motion'); }
-            function setOverride(value) { if (value === null) localStorage.removeItem('motion'); else localStorage.setItem('motion', value); }
-
-            function applyMotionPreference() {
-                const override = getOverride();
-                const shouldAnimate = override === 'on' ? true : (override === 'off' ? false : !prefersReduce);
-                const toggle = document.getElementById('motion-toggle');
-                if (override === 'on') { toggle.textContent = 'Motion: On'; toggle.setAttribute('aria-pressed', 'true'); }
-                else if (override === 'off') { toggle.textContent = 'Motion: Off'; toggle.setAttribute('aria-pressed', 'false'); }
-                else { toggle.textContent = 'Motion: Auto'; toggle.setAttribute('aria-pressed', 'false'); }
-                if (shouldAnimate) startAnimation(true); else stopAnimation();
-            }
-
-            applyMotionPreference();
-
-            document.getElementById('motion-toggle').addEventListener('click', function() {
-                const current = getOverride();
-                // cycle: null (auto) -> on -> off -> auto
-                const next = current === null ? 'on' : (current === 'on' ? 'off' : null);
-                setOverride(next);
-                applyMotionPreference();
-            });
+            // Always animate; pause on hidden
+            startAnimation(true);
 
             document.addEventListener('visibilitychange', function() {
-                const override = getOverride();
-                const shouldAnimate = override === 'on' ? true : (override === 'off' ? false : !prefersReduce);
                 if (document.hidden) {
                     if (rafId) cancelAnimationFrame(rafId);
                     rafId = null;
-                } else if (shouldAnimate && !rafId) {
+                } else if (!rafId) {
                     startAnimation(false);
                 }
             });
-
-            if (mq) {
-                mq.addEventListener('change', applyMotionPreference);
-            }
         })();
     </script>
 </body>
